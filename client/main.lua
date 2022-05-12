@@ -9,7 +9,6 @@ local function openMenu(data)
 	for _,v in pairs(data) do
 		if v["icon"] then
 			local img = "qbr-inventory/html/"
-            print(sharedItems[tostring(v["icon"])].image)
 			if sharedItems[tostring(v["icon"])] then
 				if not string.find(sharedItems[tostring(v["icon"])].image, "images/") then
 					img = img.."images/"
