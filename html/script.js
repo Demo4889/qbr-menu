@@ -3,13 +3,15 @@ let buttonParams = [];
 const openMenu = (data = null) => {
     let html = "";
     data.forEach((item, index) => {
-        let header = item.header;
-        let message = item.txt || item.text;
-        let isMenuHeader = item.isMenuHeader;
-        let isDisabled = item.isDisabled;
-        let icon = item.icon;
-        html += getButtonRender(header, message, index, isMenuHeader,isDisabled,icon);
-        if (item.params) buttonParams[index] = item.params;
+        if(!item.hidden) {
+            let header = item.header;
+            let message = item.txt || item.text;
+            let isMenuHeader = item.isMenuHeader;
+            let isDisabled = item.disabled;
+            let icon = item.icon;
+            html += getButtonRender(header, message, index, isMenuHeader, isDisabled, icon);  
+            if (item.params) buttonParams[index] = item.params;
+        }
     });
 
     $("#buttons").html(html);
@@ -22,8 +24,7 @@ const openMenu = (data = null) => {
     });
 };
 
-
-const getButtonRender = (header, message = null, id, isMenuHeader,isDisabled,icon) => {
+const getButtonRender = (header, message = null, id, isMenuHeader, isDisabled, icon) => {
     return `
         <div class="${isMenuHeader ? "title" : "button"} ${isDisabled ? "disabled" : ""}" id="${id}">
             <div class="icon"> <img src=nui://${icon} width=30px onerror="this.onerror=null; this.remove();"> <i class="${icon}" onerror="this.onerror=null; this.remove();"></i> </div>
@@ -41,7 +42,7 @@ const closeMenu = () => {
 };
 
 const postData = (id) => {
-    $.post(`https://${GetParentResourceName()}/clickedButton`, JSON.stringify(id + 1));
+    $.post(`https://${GetParentResourceName()}/clickedButton`, JSON.stringify(parseInt(id) + 1));
     return closeMenu();
 };
 
@@ -49,6 +50,7 @@ const cancelMenu = () => {
     $.post(`https://${GetParentResourceName()}/closeMenu`);
     return closeMenu();
 };
+
 
 
 window.addEventListener("message", (event) => {
