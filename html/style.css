@@ -6,7 +6,7 @@
     padding: 0;
     margin: 0;
     font-family: "Rye", sans-serif !important;
-    font-weight: 500;
+    font-weight: 300;
 }
 
 #container {
@@ -55,7 +55,7 @@ body::-webkit-scrollbar {
     overflow: hidden;
     padding: 0.45rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     cursor: pointer;
 }
 
@@ -78,7 +78,19 @@ body::-webkit-scrollbar {
     overflow: hidden;
     padding: 0.45rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: left;
+}
+
+.disabled {
+    background: rgba(102, 102, 102, 0.9) !important;
+    cursor: default;
 }
 
 div > .text {

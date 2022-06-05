@@ -1,12 +1,22 @@
+
 local headerShown = false
 local sendData = nil
-
+local sharedItems = exports['qbr-core']:GetItems()
 -- Functions
-
-
 
 local function openMenu(data)
     if not data or not next(data) then return end
+	for _,v in pairs(data) do
+		if v["icon"] then
+			local img = "qbr-inventory/html/"
+			if sharedItems[tostring(v["icon"])] then
+				if not string.find(sharedItems[tostring(v["icon"])].image, "images/") then
+					img = img.."images/"
+				end
+				v["icon"] = img..sharedItems[tostring(v["icon"])].image
+			end
+		end
+	end
     SetNuiFocus(true, true)
     headerShown = false
     sendData = data
@@ -86,29 +96,10 @@ RegisterCommand('+playerfocus', function()
     end
 end)
 
-RegisterKeyMapping('+playerFocus', 'Give Menu Focus', 'keyboard', 'LMENU')
+RegisterKeyMapping('+playerFocus', 'Menü Fokus', 'keyboard', 'LMENU')
 
 -- Exports
 
 exports('openMenu', openMenu)
 exports('closeMenu', closeMenu)
 exports('showHeader', showHeader)
-
-RegisterCommand("qbrmenutest", function(source, args, raw)
-    openMenu({
-        {
-            header = "Main Title",
-            isMenuHeader = true, -- Set to true to make a nonclickable title
-        },
-        {
-            header = "Sub Menu Button",
-            txt = "This goes to a sub menu",
-            params = {
-                event = "qbr-menu:client:testMenu2",
-                args = {
-                    number = 1,
-                }
-            }
-        },
-    })
-end)
