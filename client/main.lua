@@ -1,10 +1,12 @@
 
 local headerShown = false
 local sendData = nil
+local closeFunction = nil
 local sharedItems = exports['qbr-core']:GetItems()
 -- Functions
 
-local function openMenu(data)
+local function openMenu(data, onClose)
+
     if not data or not next(data) then return end
 	for _,v in pairs(data) do
 		if v["icon"] then
@@ -24,6 +26,8 @@ local function openMenu(data)
         action = 'OPEN_MENU',
         data = table.clone(data)
     })
+    closeFunction = onClose
+
 end
 
 local function closeMenu()
@@ -47,8 +51,8 @@ end
 
 -- Events
 
-RegisterNetEvent('qbr-menu:client:openMenu', function(data)
-    openMenu(data)
+RegisterNetEvent('qbr-menu:client:openMenu', function(data, onClose)
+    openMenu(data, onClose)
 end)
 
 RegisterNetEvent('qbr-menu:client:closeMenu', function()
@@ -127,12 +131,17 @@ RegisterNUICallback('mouseOut', function(option)
         end
     end
 end)
-   
 
 RegisterNUICallback('closeMenu', function()
     headerShown = false
     sendData = nil
     SetNuiFocus(false)
+    if closeFunction then
+        pcall(function()
+             closeFunction()
+        end)
+    end
+    closeFunction = nil
 end)
 
 -- Command and Keymapping
