@@ -55,6 +55,7 @@ RegisterNetEvent('qbr-menu:client:closeMenu', function()
     closeMenu()
 end)
 
+
 -- NUI Callbacks
 
 RegisterNUICallback('clickedButton', function(option)
@@ -81,6 +82,52 @@ RegisterNUICallback('clickedButton', function(option)
         end
     end
 end)
+
+RegisterNUICallback('mouseOver', function(option)
+    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', 1)
+    if not sendData then return end 
+    local data = sendData[tonumber(option)]
+    if not data then return end 
+    local onMouseOver = data.onMouseOver
+    if not onMouseOver then return end
+    local event = onMouseOver.event
+    if event then 
+        if onMouseOver.isServer then
+            TriggerServerEvent(event, onMouseOver.args)
+        elseif onMouseOver.isCommand then
+            ExecuteCommand(event)
+        elseif onMouseOver.isQBCommand then
+            TriggerServerEvent('QBCore:CallCommand', event, onMouseOver.args)
+        elseif onMouseOver.isAction then
+            event(onMouseOver.args)
+        else
+            TriggerEvent(event, onMouseOver.args)
+        end
+    end
+end)
+
+RegisterNUICallback('mouseOut', function(option)
+    if not sendData then return end 
+    local data = sendData[tonumber(option)]
+    if not data then return end 
+    local onMouseOut = data.onMouseOut
+    if not onMouseOut then return end
+    local event = onMouseOut.event
+    if  event then 
+        if onMouseOut.isServer then
+            TriggerServerEvent(event, onMouseOut.args)
+        elseif onMouseOut.isCommand then
+            ExecuteCommand(event)
+        elseif onMouseOut.isQBCommand then
+            TriggerServerEvent('QBCore:CallCommand', event, onMouseOut.args)
+        elseif onMouseOut.isAction then
+            event(onMouseOut.args)
+        else
+            TriggerEvent(event, onMouseOut.args)
+        end
+    end
+end)
+   
 
 RegisterNUICallback('closeMenu', function()
     headerShown = false
