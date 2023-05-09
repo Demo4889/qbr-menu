@@ -1,10 +1,12 @@
 
 local headerShown = false
 local sendData = nil
+local closeFunction = nil
 local sharedItems = exports['qbr-core']:GetItems()
 -- Functions
 
-local function openMenu(data)
+local function openMenu(data, onClose)
+
     if not data or not next(data) then return end
 	for _,v in pairs(data) do
 		if v["icon"] then
@@ -24,6 +26,8 @@ local function openMenu(data)
         action = 'OPEN_MENU',
         data = table.clone(data)
     })
+    closeFunction = onClose
+
 end
 
 local function closeMenu()
@@ -47,13 +51,14 @@ end
 
 -- Events
 
-RegisterNetEvent('qbr-menu:client:openMenu', function(data)
-    openMenu(data)
+RegisterNetEvent('qbr-menu:client:openMenu', function(data, onClose)
+    openMenu(data, onClose)
 end)
 
 RegisterNetEvent('qbr-menu:client:closeMenu', function()
     closeMenu()
 end)
+
 
 -- NUI Callbacks
 
@@ -82,10 +87,61 @@ RegisterNUICallback('clickedButton', function(option)
     end
 end)
 
+RegisterNUICallback('mouseOver', function(option)
+    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', 1)
+    if not sendData then return end 
+    local data = sendData[tonumber(option)]
+    if not data then return end 
+    local onMouseOver = data.onMouseOver
+    if not onMouseOver then return end
+    local event = onMouseOver.event
+    if event then 
+        if onMouseOver.isServer then
+            TriggerServerEvent(event, onMouseOver.args)
+        elseif onMouseOver.isCommand then
+            ExecuteCommand(event)
+        elseif onMouseOver.isQBCommand then
+            TriggerServerEvent('QBCore:CallCommand', event, onMouseOver.args)
+        elseif onMouseOver.isAction then
+            event(onMouseOver.args)
+        else
+            TriggerEvent(event, onMouseOver.args)
+        end
+    end
+end)
+
+RegisterNUICallback('mouseOut', function(option)
+    if not sendData then return end 
+    local data = sendData[tonumber(option)]
+    if not data then return end 
+    local onMouseOut = data.onMouseOut
+    if not onMouseOut then return end
+    local event = onMouseOut.event
+    if  event then 
+        if onMouseOut.isServer then
+            TriggerServerEvent(event, onMouseOut.args)
+        elseif onMouseOut.isCommand then
+            ExecuteCommand(event)
+        elseif onMouseOut.isQBCommand then
+            TriggerServerEvent('QBCore:CallCommand', event, onMouseOut.args)
+        elseif onMouseOut.isAction then
+            event(onMouseOut.args)
+        else
+            TriggerEvent(event, onMouseOut.args)
+        end
+    end
+end)
+
 RegisterNUICallback('closeMenu', function()
     headerShown = false
     sendData = nil
     SetNuiFocus(false)
+    if closeFunction then
+        pcall(function()
+             closeFunction()
+        end)
+    end
+    closeFunction = nil
 end)
 
 -- Command and Keymapping

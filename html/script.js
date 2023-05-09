@@ -22,6 +22,20 @@ const openMenu = (data = null) => {
             postData(target.attr('id'));
         }
     });
+
+    $('.button').mouseover(function() {
+        const target = $(this)
+        if (!target.hasClass('title') && !target.hasClass('disabled')) {
+            mouseOver(target.attr('id'));
+        }
+    });
+
+    $('.button').mouseout(function() {
+        const target = $(this)
+        if (!target.hasClass('title') && !target.hasClass('disabled')) {
+            mouseOut(target.attr('id'));
+        }
+    });
 };
 
 const getButtonRender = (header, message = null, id, isMenuHeader, isDisabled, icon) => {
@@ -44,6 +58,14 @@ const closeMenu = () => {
 const postData = (id) => {
     $.post(`https://${GetParentResourceName()}/clickedButton`, JSON.stringify(parseInt(id) + 1));
     return closeMenu();
+};
+
+const mouseOver = (id) => {
+    $.post(`https://${GetParentResourceName()}/mouseOver`, JSON.stringify(parseInt(id) + 1));
+};
+
+const mouseOut = (id) => {
+    $.post(`https://${GetParentResourceName()}/mouseOut`, JSON.stringify(parseInt(id) + 1));
 };
 
 const cancelMenu = () => {
