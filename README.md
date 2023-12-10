@@ -1,7 +1,6 @@
 ## Menu System for QBRCoreFramework 📄
 
 ## Screenshots
-![Menu](https://cdn.discordapp.com/attachments/1021700112776437760/1183288337700769832/image.png?ex=6587ca24&is=65755524&hm=f9ee59a376ddda94f9e6e3f7e22aa914de5d48d89b14e21bdec40d66b1d46472&)
 ![Menu2](https://cdn.discordapp.com/attachments/1021700112776437760/1183289410226229338/image.png?ex=6587cb23&is=65755623&hm=aa95a9d46ebd56839cff7d00ce5451fb9933e2a6e9dcbc3592368fb694b15785&)
 
 ## Features
