@@ -66,8 +66,7 @@ end)
 ```
 
 ## Installation
-
-# Download the script and put it in the [qbr] directory.
+Download the script and put it in the [qbr] directory.
 
 ## License
 ```
