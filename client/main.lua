@@ -152,7 +152,7 @@ RegisterCommand('+playerfocus', function()
     end
 end)
 
-RegisterKeyMapping('+playerFocus', 'Menü Fokus', 'keyboard', 'LMENU')
+RegisterKeyMapping('+playerFocus', 'Menu Focus', 'keyboard', 'LMENU')
 
 -- Exports
 
